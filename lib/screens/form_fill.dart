@@ -21,12 +21,13 @@ class FormFill extends StatefulWidget {
 
 class _FormFillState extends State<FormFill> {
   File? imageFile;
-
+  bool showSpinner = false;
   var _ageController = TextEditingController();
   var _genderController = TextEditingController();
   var _emailController = TextEditingController();
   var _gstController = TextEditingController();
   var _phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -184,6 +185,7 @@ class _FormFillState extends State<FormFill> {
                           email: _emailController.text,
                           gstNumber: _gstController.text,
                           phone: _phoneController.text,
+                          imageUrl: imageFile,
                         );
                       },
                       child: Center(

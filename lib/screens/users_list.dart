@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:plxn_task/contollers/firebaseControl.dart';
 import 'package:plxn_task/models/user_model.dart';
 
@@ -43,7 +44,51 @@ class _UsersListState extends State<UsersList> {
                 itemCount: userList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.bottomSheet(Container(
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      NetworkImage(userList[index].imageUrl!),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text("Age : ${userList[index].age}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child:
+                                    Text("Gender : ${userList[index].gender}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text("Email : ${userList[index].email}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                    "GST Number : ${userList[index].gstNumber}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                    "Phone Number : ${userList[index].phone}"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ));
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
