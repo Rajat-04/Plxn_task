@@ -1,18 +1,42 @@
 class UserModel {
   String? id;
-  int? age;
+  String? age;
   String? gender;
   String? email;
   String? gstNumber;
   String? phone;
-  String? imageUrl;
+  //String? imageUrl;
 
   UserModel({
+    required this.id,
     required this.age,
     required this.gender,
     required this.email,
     required this.gstNumber,
     required this.phone,
-    required this.imageUrl,
+    //required this.imageUrl,
   });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      age: json['age'],
+      gender: json['gender'],
+      email: json['email'],
+      gstNumber: json['gstNumber'],
+      phone: json['phone'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['age'] = age;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['gstNumber'] = gstNumber;
+    data['phone'] = phone;
+    //data['imageUrl'] = imageUrl;
+    return data;
+  }
 }
