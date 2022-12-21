@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:plxn_task/models/user_model.dart';
 import 'package:plxn_task/screens/users_list.dart';
 import 'package:plxn_task/contollers/firebaseControl.dart';
@@ -21,7 +22,7 @@ class FormFill extends StatefulWidget {
 
 class _FormFillState extends State<FormFill> {
   File? imageFile;
-  bool showSpinner = false;
+  bool _isInAsyncCall = false;
   var _ageController = TextEditingController();
   var _genderController = TextEditingController();
   var _emailController = TextEditingController();
@@ -37,163 +38,170 @@ class _FormFillState extends State<FormFill> {
           centerTitle: true,
           title: Text("Form"),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 15,
-                  ),
-                  imageFile == null
-                      ? InkWell(
-                          onTap: () {
-                            showBottomSheet();
-                          },
-                          child: CircleAvatar(
-                            radius: 50,
-                            child: Icon(
-                              Icons.person,
-                              size: 64,
+        body: ModalProgressHUD(
+          inAsyncCall: _isInAsyncCall,
+          progressIndicator: CircularProgressIndicator(),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    imageFile == null
+                        ? InkWell(
+                            onTap: () {
+                              showBottomSheet();
+                            },
+                            child: CircleAvatar(
+                              radius: 50,
+                              child: Icon(
+                                Icons.person,
+                                size: 64,
+                              ),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: showBottomSheet,
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: FileImage(imageFile!),
                             ),
                           ),
-                        )
-                      : InkWell(
-                          onTap: showBottomSheet,
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundImage: FileImage(imageFile!),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: TextField(
+                          controller: _ageController,
+                          keyboardType: TextInputType.number,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            hintText: 'Age',
                           ),
                         ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: TextField(
+                          controller: _genderController,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            hintText: 'Gender',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            hintText: 'Email Id',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: TextField(
+                          controller: _gstController,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            hintText: 'GST Number',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: TextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                            ),
+                            hintText: 'Phone Number',
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
                       width: MediaQuery.of(context).size.width / 1.25,
-                      child: TextField(
-                        controller: _ageController,
-                        keyboardType: TextInputType.number,
-                        decoration: new InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          hintText: 'Age',
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _isInAsyncCall = true;
+                          });
+                          addUser(
+                            age: _ageController.text,
+                            gender: _genderController.text,
+                            email: _emailController.text,
+                            gstNumber: _gstController.text,
+                            phone: _phoneController.text,
+                            imageUrl: imageFile,
+                          );
+                        },
+                        child: Center(
+                          child: Text("GO"),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.25,
-                      child: TextField(
-                        controller: _genderController,
-                        decoration: new InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          hintText: 'Gender',
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.25,
-                      child: TextField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: new InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          hintText: 'Email Id',
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.25,
-                      child: TextField(
-                        controller: _gstController,
-                        decoration: new InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          hintText: 'GST Number',
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.25,
-                      child: TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: new InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1.0),
-                          ),
-                          hintText: 'Phone Number',
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.25,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        addUser(
-                          age: _ageController.text,
-                          gender: _genderController.text,
-                          email: _emailController.text,
-                          gstNumber: _gstController.text,
-                          phone: _phoneController.text,
-                          imageUrl: imageFile,
-                        );
-                      },
-                      child: Center(
-                        child: Text("GO"),
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
